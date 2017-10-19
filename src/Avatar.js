@@ -6,10 +6,24 @@ import {isSameUser, isSameDay, warnDeprecated} from "./utils";
 
 export default class Avatar extends React.Component {
   renderAvatar() {
+    const renderAvatarOnTop = this.props.renderAvatarOnTop;
+    const messageToCompare = renderAvatarOnTop ? this.props.previousMessage : this.props.nextMessage;
+
     if (this.props.renderAvatar) {
       const {renderAvatar, ...avatarProps} = this.props;
       return this.props.renderAvatar(avatarProps);
     }
+
+    if (isSameUser(this.props.currentMessage, messageToCompare) && isSameDay(this.props.currentMessage, messageToCompare)) {
+      return (
+        <View style={[styles[this.props.position].container, this.props.containerStyle[this.props.position]]}>
+          <GiftedAvatar
+            avatarStyle={StyleSheet.flatten([styles[this.props.position].image, this.props.imageStyle[this.props.position]])}
+          />
+        </View>
+      );
+    }
+
     return (
       <GiftedAvatar
         avatarStyle={StyleSheet.flatten([styles[this.props.position].image, this.props.imageStyle[this.props.position]])}
@@ -26,16 +40,6 @@ export default class Avatar extends React.Component {
 
     if (this.props.renderAvatar === null) {
       return null
-    }
-
-    if (isSameUser(this.props.currentMessage, messageToCompare) && isSameDay(this.props.currentMessage, messageToCompare)) {
-      return (
-        <View style={[styles[this.props.position].container, this.props.containerStyle[this.props.position]]}>
-          <GiftedAvatar
-            avatarStyle={StyleSheet.flatten([styles[this.props.position].image, this.props.imageStyle[this.props.position]])}
-          />
-        </View>
-      );
     }
 
     return (
